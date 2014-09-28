@@ -1,0 +1,20 @@
+{% extends "base.jinja" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+      <div id="notes">
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_templates %}
+<script type="text/template" id="notes-template">
+  <ul>
+  <% notes.forEach(function(note){ %>
+    <li><%= note.title %> - <%= note.scripture %></li>
+  <% }); %>
+  </ul>
+</script>
+{% endblock %}

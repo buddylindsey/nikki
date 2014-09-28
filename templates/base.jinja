@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}Bible nikki{% endblock %}</title>
+        {{ compressed_css('vendor') }}
+        {{ compressed_css('main') }}
+    </head>
+    <body>
+        <div class="container-fluid">
+            {% block content %}
+            {% endblock %}
+        </div>
+        {{ compressed_js('vendor') }}
+        {{ compressed_js('main') }}
+        {% block additional_js %}
+        {% endblock %}
+        {% block js_templates %}
+        {% endblock %}
+    </body>
+</html>
