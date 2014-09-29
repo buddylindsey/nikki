@@ -122,7 +122,8 @@ PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
 PIPELINE_JS = {
     'main': {
         'source_filenames': (
-            'coffee/app.coffee',
+            # 'coffee/app.coffee',
+            'js/app.js',
         ),
         'output_filename': 'js/main.min.js'
     },
