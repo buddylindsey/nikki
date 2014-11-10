@@ -9,6 +9,19 @@ $(function(){
         }
     });
 
+    app.NoteView = Backbone.Model.extend({
+        tagName: 'li',
+        template: $("#note-view"),
+        initialize: function() {
+            this.listenTo(this.model, 'change:title', this.render);
+        },
+        render: function() {
+            var tmpl = _.template(this.template);
+            this.$el.html(tmpl(this.model.toJSON()));
+            return this;
+        }
+    });
+
     app.Notebook = Backbone.Collection.extend({
         model: app.Note,
         url: "/api/notes/"
@@ -36,19 +49,40 @@ $(function(){
 
     new app.NoteFormView()
 
-    app.NoteListView = Backbone.View.extend({
-        el: "#notes",
+    app.NotesList = Backbone.View.extend({
+        tagName: 'div',
         initialize: function() {
-            this.listenTo(app.notes, "add remove", this.render);
             this.render();
         },
         render: function() {
-            template_html = $("#notes-template").html();
-            template = _.template(template_html, {notes: app.notes});
-            this.$el.html(template);
-            return this
+            var notesView = this.collection.map(function(note) {
+                return (new NoteView({model: note})).render().el;
+            });
+            this.$el.html(notesView);
+            return this;
         }
     });
 
-    new app.NoteListView();
+    new app.NotesList();
+
+/*    app.NoteListView = Backbone.View.extend({*/
+        //el: "#notes ul",
+        //initialize: function() {
+            //this.listenTo(app.notes, "add remove", this.render);
+        //},
+        //events: {
+            //"click span.delete": "delete"
+        //},
+        //delete: function(el) {
+            //console.log(el);
+        //},
+        //render: function() {
+            //template_html = $("#notes-template").html();
+            //template = _.template(template_html, {notes: app.notes});
+            //this.$el.append(template);
+            //return this
+        //}
+    //});
+
+    /*new app.NoteListView();*/
 });

@@ -7,3 +7,6 @@ class NoteSerializer(ModelSerializer):
     class Meta:
         model = Note
         fields = ('id', 'user', 'title', 'scripture', 'body')
+
+    def validate_scripture(self, attrs, source):
+        pass

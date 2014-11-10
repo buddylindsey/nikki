@@ -7,3 +7,6 @@ class Note(TimeStampedModel):
     title = models.CharField(max_length=255, blank=True)
     scripture = models.CharField(max_length=50)
     body = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return "{} - {}".format(self.user, self.title)

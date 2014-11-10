@@ -21,7 +21,6 @@ $( () ->
           template_html = $("#notes-template").html()
           template = _.template template_html,
               notes: notes
-          debugger
           @.$el.html(template)
           return @
 
