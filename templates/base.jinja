@@ -3,19 +3,26 @@
     <head>
         <meta charset="utf-8">
         <title>{% block title %}Bible nikki{% endblock %}</title>
-        {{ compressed_css('vendor') }}
-        {{ compressed_css('main') }}
+        <link rel="stylesheet" href="{{ static('css/vendor.min.css') }}" type="text/css">
+        <link rel="stylesheet" href="{{ static('css/app.css') }}" type="text/css">
     </head>
     <body>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Nikki</a>
+                </div>
+            <div>
+        </nav>
         <div class="container-fluid">
             {% block content %}
             {% endblock %}
         </div>
-        {{ compressed_js('vendor') }}
-        {{ compressed_js('main') }}
-        {% block additional_js %}
-        {% endblock %}
         {% block js_templates %}
+        {% endblock %}
+        <script type="text/javascript" src="{{ static('js/vendor.min.js') }}"></script>
+        <script type="text/javascript" src="{{ static('js/app.js') }}"></script>
+        {% block additional_js %}
         {% endblock %}
     </body>
 </html>

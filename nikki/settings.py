@@ -38,11 +38,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'django_extensions',
-    'pipeline',
     'django_jinja',
-    'django_jinja.contrib._pipeline',
     'notes',
     'home',
+    'api',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -90,7 +89,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static/build'),
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_final')
@@ -106,49 +105,3 @@ TEMPLATE_LOADERS = (
 )
 
 DEFAULT_JINJA2_TEMPLATE_EXTENSION = '.jinja'
-
-# Pipeline configuration
-
-STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
-
-PIPELINE_COMPILERS = (
-    'pipeline.compilers.coffee.CoffeeScriptCompiler',
-    'pipeline.compilers.stylus.StylusCompiler',
-)
-
-PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
-PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
-
-PIPELINE_JS = {
-    'main': {
-        'source_filenames': (
-            # 'coffee/app.coffee',
-            'js/app.js',
-        ),
-        'output_filename': 'js/main.min.js'
-    },
-    'vendor': {
-        'source_filenames': (
-            'js/jquery-2.1.1-min.js',
-            'js/bootstrap-3.2.0.min.js',
-            'js/underscore-1.6.0-min.js',
-            'js/backbone-1.1.2-min.js',
-            'js/django-csrf.js'
-        ),
-        'output_filename': 'js/vendor.js'
-    }
-}
-PIPELINE_CSS = {
-    'main': {
-        'source_filenames': (
-            'stylus/main.styl',
-        ),
-        'output_filename': 'css/main.min.css'
-    },
-    'vendor': {
-        'source_filenames': (
-            'css/bootstrap-3.2.0.min.css',
-        ),
-        'output_filename': 'css/vendor.min.css'
-    }
-}

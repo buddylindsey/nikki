@@ -7,3 +7,5 @@ tags
 media/*
 static/stylus/*.css
 static/coffee/*.js
+node_modules
+static/build

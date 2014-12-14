@@ -1,88 +1,73 @@
-$(function(){
-    var app = app || {};
+var app = app || {};
 
-    app.Note = Backbone.Model.extend({
-        default: {
-            title: "",
-            scripture: "",
-            body: ""
-        }
-    });
+app.Note = Backbone.Model.extend({
+    default: {
+        title: "",
+        scripture: "",
+        body: ""
+    }
+});
 
-    app.NoteView = Backbone.Model.extend({
-        tagName: 'li',
-        template: $("#note-view"),
-        initialize: function() {
-            this.listenTo(this.model, 'change:title', this.render);
-        },
-        render: function() {
-            var tmpl = _.template(this.template);
-            this.$el.html(tmpl(this.model.toJSON()));
-            return this;
-        }
-    });
+app.Notebook = Backbone.Collection.extend({
+    model: app.Note,
+    url: "/api/notes/"
+});
 
-    app.Notebook = Backbone.Collection.extend({
-        model: app.Note,
-        url: "/api/notes/"
-    });
+app.NoteView = Backbone.View.extend({
+    tagName: "div",
+    className: "note",
+    template: _.template($('#note-view').html()),
+    events: {
+        "click .delete": "deleteNote"
+    },
+    render: function () {
+        this.$el.html(this.template(this.model.attributes));
+        return this;
+    },
+    deleteNote: function () {
+        this.model.destroy();
+        this.remove();
+    }
+});
 
-    app.notes = new app.Notebook();
+app.NotesListView = Backbone.View.extend({
+    el: "#note-content",
+    events: {
+        'click #add': 'addNote'
+    },
+    initialize: function () {
+        this.collection = new app.Notebook();
+        this.collection.fetch({reset: true});
+        this.render();
 
-    app.NoteFormView = Backbone.View.extend({
-        el: $("#add-note"),
-        events: {
-            "submit": "submit"
-        },
-        submit: function(e) {
-            e.preventDefault();
-            note = {
-                user: this.$('input[name=user]').val(),
-                title: this.$('input[name=title]').val(),
-                scripture: this.$('input[name=scripture]').val(),
-                body: this.$('input[name=body]').val()
-            }
-            app.notes.create(note);
-            this.$el[0].reset();
-        }
-    });
+        this.listenTo(this.collection, 'reset', this.render);
+        this.listenTo(this.collection, 'add', this.renderNote)
+    },
+    render: function () {
+        this.collection.each(function (item) {
+            this.renderNote(item);
+        }, this);
+    },
+    renderNote: function (item) {
+        var noteView = new app.NoteView({model: item});
+        $("#notes").append(noteView.render().el);
+    },
+    addNote: function (e) {
+        e.preventDefault();
 
-    new app.NoteFormView()
+        var formData = {};
 
-    app.NotesList = Backbone.View.extend({
-        tagName: 'div',
-        initialize: function() {
-            this.render();
-        },
-        render: function() {
-            var notesView = this.collection.map(function(note) {
-                return (new NoteView({model: note})).render().el;
-            });
-            this.$el.html(notesView);
-            return this;
-        }
-    });
+        $('#add-note div').children('input').each( function( i, el ) {
+              element_value = $(el).val();
+              if(element_value != '') {
+                  formData[el.id] = element_value;
+              }
+        });
+        formData['body'] = $('#add-note div #body').val()
+        this.collection.create(new app.Note(formData));
+    }
+});
 
-    new app.NotesList();
-
-/*    app.NoteListView = Backbone.View.extend({*/
-        //el: "#notes ul",
-        //initialize: function() {
-            //this.listenTo(app.notes, "add remove", this.render);
-        //},
-        //events: {
-            //"click span.delete": "delete"
-        //},
-        //delete: function(el) {
-            //console.log(el);
-        //},
-        //render: function() {
-            //template_html = $("#notes-template").html();
-            //template = _.template(template_html, {notes: app.notes});
-            //this.$el.append(template);
-            //return this
-        //}
-    //});
-
-    /*new app.NoteListView();*/
+$(function () {
+    new app.NotesListView();
 });
