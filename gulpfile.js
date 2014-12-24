@@ -19,7 +19,7 @@ gulp.task('stylus', function () {
 
 gulp.task('app', function () {
   gulp.src('./static/js/app.js')
-    .pipe(gulp.dest('./staticfiles/js'));
+    .pipe(gulp.dest('./static/build/js'));
 });
 
 gulp.task('vendor', function () {
